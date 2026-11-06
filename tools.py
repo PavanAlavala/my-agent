@@ -28,11 +28,28 @@ def get_weather(city):
     temp = data["current"]["temperature_2m"]
     unit=data["current_units"]["temperature_2m"]
     return str(temp)+ unit
+def save_note(text):
+    with open("notes.txt", "a") as f:
+        f.write(text + "\n")
+    return "Saved note: " + text
+def read_notes():
+    try:
+        with open("notes.txt", "r") as f:
+            notes = f.read()
+    except FileNotFoundError:
+        return "No notes yet."
+    if notes == "":
+        return "No notes yet."
+    return "\n" + notes
+
 toolbox={"add":add,
          "divide": divide,
          "greet":greet,
          "multiply":multiply,
-         "weather": get_weather}
+         "weather": get_weather,
+         "note": save_note,
+         "notes": read_notes
+         }
 while True:
     command = input("you: ")
     parts = command.split()
@@ -54,6 +71,10 @@ while True:
     try:
         if tool_name == "greet" or tool_name== "weather":
             result= chosen_tool(parts[1])
+        elif tool_name == "note":
+            result = chosen_tool(" ".join(parts[1:]))
+        elif tool_name == "notes":
+            result = chosen_tool()
         else:
             a= float(parts[1])
             b=float(parts[2])
