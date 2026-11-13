@@ -15,7 +15,7 @@ cities ={
 def get_weather(city):
     city=city.lower()
     if city not in cities:
-        return "I don't know the city"+ city
+        return "I don't know the city "+ city
     lat= cities[city][0]
     lon = cities[city][1]
     url = ("https://api.open-meteo.com/v1/forecast?latitude=" + str(lat)
@@ -23,7 +23,7 @@ def get_weather(city):
            + "&current=temperature_2m&temperature_unit=fahrenheit")
     response=requests.get(url)
     if response.status_code != 200:
-        return "weather API error:"+ str(response.status_code)
+        return "weather API error: "+ str(response.status_code)
     data = response.json()
     temp = data["current"]["temperature_2m"]
     unit=data["current_units"]["temperature_2m"]
@@ -64,6 +64,9 @@ while True:
         break
     if tool_name not in toolbox:
         print("Agent: I dont have a tool called " + tool_name)
+        continue
+    if tool_name == "weather" and len(parts) < 2:
+        print("Agent: weather needs a city, like: weather troy")
         continue
 
     chosen_tool = toolbox[tool_name]
